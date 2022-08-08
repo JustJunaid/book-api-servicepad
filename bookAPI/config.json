@@ -1,0 +1,7 @@
+{
+  "SECRET_KEY" : "c400383553b57ba9a1a36692e682afe4f3bca1d5f56db23d91df43e135b6db6e",
+  "PARAMS":{
+    "DB_URI": "postgresql://postgres:root123@localhost/bookdb"
+  },
+  "BASE_URL" : "http://127.0.0.1:5000"
+}

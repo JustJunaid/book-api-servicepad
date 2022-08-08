@@ -1,0 +1,307 @@
+{
+   "openapi": "3.0.0",
+   "info": {
+    "description": "your Book-stock-management API description is here",
+    "version": "1.0.0",
+    "title": "Book Publication API",
+    "license": {
+          "name": "BookApp",
+          "url": "#"
+        }
+    },
+    "tags": [
+            {
+              "name": "Book-API",
+              "description": "Manage your publications by following these rules"
+            }
+    ],
+    "servers": [
+        {
+        "url": "/"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "username": {"type": "string"},
+                    "email":    {"type": "string"},
+                    "password": {"type": "string"},
+                    "image":    {"type": "string"}
+                }
+             },
+            "Publication":{
+                "type" : "object",
+                "properties" : {
+                      "id" :         {"type" : "number"},
+                      "title" :      {"type" : "string"},
+                      "description" :{"type" : "string"},
+                      "priority" :   {"type" : "number"},
+                      "created_at" : {"type" : "string"},
+                      "updated_at" : {"type" : "string"},
+                      "status" :     {"type" : "string"}
+                }
+              }
+           }
+    },
+    "paths": {
+         "/signup": {
+             "post": {
+             "tags": ["Sign up"],
+             "summary": "Create user",
+             "requestBody": {
+             "description": "Post New user To Database",
+             "required": true,
+             "content": {
+                 "application/json": {
+                 "schema": {
+                       "type": "object",
+                        "properties": {
+                             "username": {"type": "string"},
+                             "email":    {"type": "string"},
+                             "password": {"type": "string"}
+                        }
+                     }
+                 }
+             }
+             },
+             "responses": {
+                 "200": {
+                     "description": "OK",
+                     "schema": {
+                     "$ref": "#/components/schemas/User"
+                     }
+                 }
+             }
+             }
+         },
+         "/login": {
+             "post": {
+             "tags": ["Login"],
+             "summary": "user Login",
+             "requestBody": {
+             "description": "Login To App",
+             "required": true,
+             "content": {
+                 "application/json": {
+                   "schema": {
+                       "type": "object",
+                        "properties": {
+                             "email": {"type": "string"},
+                             "password":    {"type": "string"}
+                        }
+                    }
+                 }
+             }
+             },
+             "responses": {
+                 "200": {
+                     "description": "OK"
+                 },
+                 "404": {
+                     "description": "user does not exist"
+                 }
+             }
+             }
+         },
+         "/update-dp": {
+             "put": {
+             "tags": ["Update your DP"],
+             "summary": "Add a profile picture",
+             "requestBody": {
+             "description": "Update your profile picture",
+             "required": true,
+             "content": {
+                 "multipart/form-data": {
+                     "schema": {
+                         "type": "object",
+                         "properties": {
+                             "image": {"type": "string","format": "binary"}
+                          }
+                      }
+                 }
+             }
+             },
+             "responses": {
+                 "200": {
+                     "description": "OK"
+                 }
+             }
+             }
+         },
+         "/update-user-info": {
+             "put": {
+             "tags": ["Update your info"],
+             "summary": "Update current user info",
+             "requestBody": {
+             "description": "Update current user info",
+             "required": true,
+             "content": {
+                 "application/json": {
+                   "schema": {
+                       "type": "object",
+                        "properties": {
+                            "username":  {"type": "string"},
+                             "email":    {"type": "string"},
+                             "password": {"type": "string"},
+                        }
+                    }
+                 }
+             }
+             },
+             "responses": {
+                 "200": {
+                     "description": "OK"
+                 },
+                 "500": {
+                     "description": "Email-ID already exist!!"
+                 }
+             }
+             }
+         },
+         "/user": {
+             "get": {
+             "tags": ["User Info"],
+             "summary": "current user info",
+             "responses": {
+                 "200": {"description": "OK"},
+                 "404": {"description": "Login error!!"}
+             }
+             }
+         },
+         "/delete-user": {
+             "delete": {
+             "tags": ["Delete user"],
+             "summary": "Delete current user from DB (self delete, because this app has no superuser)",
+             "responses": {
+                 "200": {"description": "OK"},
+                 "404": {"description": "account does not exist!!"}
+             }
+             }
+         },
+         "/logout": {
+             "get": {
+             "tags": ["Logout"],
+             "summary": "Logout current user",
+             "responses": {
+                 "200": {"description": "OK"},
+                 "404": {"description": "successfuly logged out!!"}
+             }
+             }
+         },
+         "/addbook": {
+             "post": {
+             "tags": ["Add a book"],
+             "summary": "Create new book record",
+             "requestBody": {
+             "description": "Post New book To Database",
+             "required": true,
+             "content": {
+                 "application/json": {
+                 "schema": {
+                      "properties" : {
+                         "title" :      {"type" : "string"},
+                         "description" :{"type" : "string"},
+                         "priority" :   {"type" : "number"},
+                         "status" :     {"type" : "string"}
+                        }
+                    }
+                 }
+             }
+             },
+             "responses": {
+                 "200": {"description": "OK"},
+                 "404": {"description": "wrong request method"}
+              }
+             }
+         },
+         "/updatebook/{id}": {
+             "put": {
+             "tags": ["Update book"],
+             "summary": "Update book records [by ID]",
+             "parameters": [
+               {
+                 "name": "id",
+                 "in": "path",
+                 "description": "Book ID",
+                 "required": true,
+                 "schema": {
+                   "type": "number"
+                 }
+               }
+             ],
+             "requestBody": {
+             "description": "Update book To Database",
+             "required": true,
+             "content": {
+                 "application/json": {
+                 "schema": {
+                      "properties" : {
+                         "title" :      {"type" : "string"},
+                         "description": {"type" : "string"},
+                         "priority" :   {"type" : "number"},
+                         "status" :     {"type" : "string"}
+                        }
+                    }
+                 }
+             }
+             },
+             "responses": {
+                 "200": {"description": "OK"},
+                 "404": {"description": "book does not exist/ permission denied/ wrong request method"}
+              }
+             }
+         },
+         "/getbook/{id}": {
+             "get": {
+             "tags": ["Get book"],
+             "summary": "Get book records [by ID]",
+             "parameters": [
+               {
+                 "name": "id",
+                 "in": "path",
+                 "description": "Book ID",
+                 "required": true,
+                 "schema": {
+                   "type": "number"
+                 }
+               }
+             ],
+             "requestBody": {
+             "description": "Get book from Database",
+             "required": false
+             },
+             "responses": {
+                 "200": {"description": "OK"},
+                 "404": {"description": "book does not exist/ permission denied/ wrong request method"}
+              }
+             }
+         },
+         "/deletebook/{id}": {
+             "delete": {
+             "tags": ["Delete a book"],
+             "summary": "Get a book's record(s) [by ID]",
+             "parameters": [
+               {
+                 "name": "id",
+                 "in": "path",
+                 "description": "Book ID",
+                 "required": true,
+                 "schema": {
+                   "type": "number"
+                 }
+               }
+             ],
+             "requestBody": {
+             "description": "Delete a book from Database",
+             "required": false
+             },
+             "responses": {
+                 "200": {"description": "OK"},
+                 "404": {"description": "book does not exist/ permission denied"}
+              }
+             }
+         },
+ }
+ }
