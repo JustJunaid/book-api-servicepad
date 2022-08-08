@@ -62,10 +62,6 @@ This API is developed by using python flask. The key features of this API are :
 
   _*get current logged in user account info from DB._
 
-```http
-  DELETE /delete-user
-```
-   _*Deletes current logged in user account/info from DB._
    **Returns** (example):
    ```http
    {
