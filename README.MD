@@ -60,14 +60,26 @@ This API is developed by using python flask. The key features of this API are :
   GET /user
 ```
 
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `None`      | `None` | return current user info
+  _*get current logged in user account info from DB._
 
 ```http
   DELETE /delete-user
 ```
    _*Deletes current logged in user account/info from DB._
+   **Returns** (example):
+   ```http
+   {
+  "status": 200,
+  "userInfo": {
+    "authenticated": true,
+    "email": "shah@john.com",
+    "image": "tony1.jpg",
+    "password": "shah",
+    "username": "john snow"
+  }
+}
+   
+   ```
 
 ```http
   GET /logout
