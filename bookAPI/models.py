@@ -1,7 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
 import datetime
+from bookAPI import db
 
-db=SQLAlchemy()
 
 class User(db.Model):
     """An admin user capable of viewing reports/table's data"""

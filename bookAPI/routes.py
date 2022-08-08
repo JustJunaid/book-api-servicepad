@@ -1,45 +1,12 @@
-from flask import Flask, request, jsonify
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import json
 import datetime
-from swagger import SWAGGER_URL, SWAGGERUI_BLUEPRINT
-from models import User, Publication, db
+from flask import request, jsonify
+from bookAPI import db, app, login_manager
+from bookAPI.models import User, Publication
+from flask_login import login_user, login_required, logout_user, current_user
 
-app = Flask(__name__)
 
-app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
-
-#...for authentication...
-login_manager = LoginManager()
-
-# ....getting data from config.json file.... #
-with open('config.json','r') as config:
-    fConfig= json.load(config)
-
-#...App URL config...
-assert isinstance(fConfig["BASE_URL"], str)
-assert  "http" in fConfig['BASE_URL']
-BASE_URL = fConfig["BASE_URL"]
-
-# secret App key config
-SECRET_KEY = fConfig.get('SECRET_KEY')
-assert isinstance(SECRET_KEY, str)
-assert SECRET_KEY != ""
-app.secret_key = SECRET_KEY
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# setting DB URI
-DB_URI = fConfig['PARAMS']['DB_URI']
-assert isinstance(DB_URI, str)
-assert DB_URI != ""
-app.config['SQLALCHEMY_DATABASE_URI']= DB_URI
-
-login_manager.init_app(app)
-
-db.app = app
-db.init_app(app)
-db.create_all()
+# ........app routes...........
 
 
 @app.route('/', methods=['GET'])
@@ -61,8 +28,7 @@ def addBook():
   if request.method=='POST':
       data = request.get_json()
       testBook = Publication.query.filter_by(title=data.get('title')).filter_by(description=data.get('description')).first()
-      if testBook is not None:
-          return jsonify({'status':404, 'message':'This book already exist!!'})
+
       book = Publication(
           title = data.get('title'),
           description = data.get('description'),
@@ -89,15 +55,19 @@ def updatebook(id):
   """
   if request.method=='PUT':
       data = request.get_json()
-      book = Publication.query.get(id)
+      book = Publication.query.filter_by(id=id).first()
       if book is not None:
           if current_user.email == book.user:
-              book.title = data.get('title')
-              book.description = data.get('description')
-              book.priority = data.get('priority')
-              book.status = data.get('status')
+              if data.get('title'):
+                  book.title = data.get('title')
+              if data.get('description'):
+                  book.description = data.get('description')
+              if data.get('priority'):
+                  book.priority = data.get('priority')
+              if data.get('status'):
+                  book.status = data.get('status')
               book.updated_at = datetime.datetime.now()
-              db.session.add(book)
+              
               db.session.commit()
               return jsonify({'status':200, 'message':'your book is Updated!!'})
           else:
@@ -226,7 +196,7 @@ def updateDp():
         if data.get('image') is not None:
             image = data.get('image')
             filepath = image.filename
-            image.save(f"./static/uploads/images/{filepath}")
+            image.save(f"/static/uploads/images/{filepath}")
             user.image= filepath
             db.session.commit()
             return jsonify({'status':200, "message":"changes done!!"})
@@ -311,10 +281,3 @@ def logout():
     db.session.commit()
     logout_user()
     return jsonify({'status':200, 'message':'successfuly logged out!!'})
-
-
-# .......................Starting the application.................... #
-
-
-if __name__ == '__main__':
-  app.run(debug=True)
