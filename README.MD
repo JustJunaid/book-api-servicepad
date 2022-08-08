@@ -13,6 +13,37 @@ This API is developed by using python flask. The key features of this API are :
 - In-Built [Swagger](https://flask-restplus.readthedocs.io/en/0.9.0/swagger.html) Documentation
 
 
+## How to Run locally
+
+- Please make sure [**postgresql**](https://www.postgresql.org/download/windows/) is installed. If not, please run this for MaCOS': 
+```brew install postgresql```
+- Once Postgresql is in place, run: ```pip3 install -r requirements.txt```
+- Create a database and update ```DB_URI`` in config.json file.
+- Finally, run ```python3 app.py```
+- The Swagger API docs for the app can be accessed via
+```http
+  /api/docs
+```
+All the available features can be accessed at Swagge docs.
+
+
+## Running Tests via Pytest
+The `test_users.py` & `test_publishers.py` files contains all available unit tests
+
+To run tests, use the following steps
+
+- #### Steps to run test(s) FOR `User` and `Publication` methods/routes:
+
+```bash
+    STEP-1:
+        - start virtualenv and run the app.py (i.e flask app)
+
+    STEP-2:
+        - activate the same virtualenv in another shell/cmd window
+        - run `pytest -s test_users.py` command
+        - the test result(s) will be seen on console with response message(s)
+```
+
 
 ## API Reference
 
@@ -132,31 +163,3 @@ This API is developed by using python flask. The key features of this API are :
 ```
 
  _*Deletes the book from DB (after permission check)._
-
-
-
-
-## Swagger Documentation
-
-The Swagger API docs for the app can be accessed via
-```http
-  /api/docs
-```
-All the available features can be accessed at Swagge docs.
-## Running Tests via Pytest
-The `test_users.py` & `test_publishers.py` files contains all available unit tests
-
-To run tests, use the following steps
-
-- #### Steps to run test(s) FOR `User` and `Publication` methods/routes:
-
-```bash
-    STEP-1:
-        - start virtualenv and run the app.py (i.e flask app)
-
-    STEP-2:
-        - activate the same virtualenv in another shell/cmd window
-        - run `pytest -s test_users.py` command
-        - the test result(s) will be seen on console with response message(s)
-```
-
